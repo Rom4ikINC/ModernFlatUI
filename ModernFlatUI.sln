@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernFlatUI", "ModernFlatUI.csproj", "{5D63412A-881C-4A28-8172-6277FA92DFB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D63412A-881C-4A28-8172-6277FA92DFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D63412A-881C-4A28-8172-6277FA92DFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D63412A-881C-4A28-8172-6277FA92DFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D63412A-881C-4A28-8172-6277FA92DFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {55CD54DA-E3E1-4F3D-8841-EDDED820E846}
+	EndGlobalSection
+EndGlobal
