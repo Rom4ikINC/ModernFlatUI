@@ -12,7 +12,7 @@ namespace ModernFlatUI
     public partial class Form1 : Form
     {
 
-        static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
+        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
         
 
         public static string PathTop10ProductsFile = Environment.CurrentDirectory + "\\Reports\\Top10\\Top10Products.txt";
@@ -318,7 +318,6 @@ namespace ModernFlatUI
                 int buying = int.Parse(textBox1.Text);
                 string queryupdate;
                 available = available - buying;
-                MessageBox.Show($"" + available);
                 if(available == 0)
                 {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='Not available' WHERE NAME = '" + txtName.Text + "';";

@@ -57,8 +57,8 @@ namespace ModernFlatUI
             this.dgvPrice,
             this.dgvQuantity,
             this.dgvDescription});
-            this.dgvProductList.Location = new System.Drawing.Point(59, 40);
-            this.dgvProductList.Margin = new System.Windows.Forms.Padding(52, 32, 52, 32);
+            this.dgvProductList.Location = new System.Drawing.Point(79, 49);
+            this.dgvProductList.Margin = new System.Windows.Forms.Padding(69, 39, 69, 39);
             this.dgvProductList.MultiSelect = false;
             this.dgvProductList.Name = "dgvProductList";
             this.dgvProductList.ReadOnly = true;
@@ -67,7 +67,7 @@ namespace ModernFlatUI
             this.dgvProductList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvProductList.RowTemplate.Height = 24;
             this.dgvProductList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProductList.Size = new System.Drawing.Size(641, 323);
+            this.dgvProductList.Size = new System.Drawing.Size(855, 398);
             this.dgvProductList.TabIndex = 0;
             this.dgvProductList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductList_CellClick);
             this.dgvProductList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductList_CellEndEdit);
@@ -126,12 +126,12 @@ namespace ModernFlatUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpenTheDescription.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnOpenTheDescription.BackgroundImage")));
             this.btnOpenTheDescription.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnOpenTheDescription.Location = new System.Drawing.Point(670, 62);
-            this.btnOpenTheDescription.Margin = new System.Windows.Forms.Padding(2);
-            this.btnOpenTheDescription.MaximumSize = new System.Drawing.Size(16, 17);
-            this.btnOpenTheDescription.MinimumSize = new System.Drawing.Size(16, 17);
+            this.btnOpenTheDescription.Location = new System.Drawing.Point(893, 76);
+            this.btnOpenTheDescription.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnOpenTheDescription.MaximumSize = new System.Drawing.Size(21, 21);
+            this.btnOpenTheDescription.MinimumSize = new System.Drawing.Size(21, 21);
             this.btnOpenTheDescription.Name = "btnOpenTheDescription";
-            this.btnOpenTheDescription.Size = new System.Drawing.Size(16, 17);
+            this.btnOpenTheDescription.Size = new System.Drawing.Size(21, 21);
             this.btnOpenTheDescription.TabIndex = 1;
             this.btnOpenTheDescription.UseVisualStyleBackColor = true;
             this.btnOpenTheDescription.Visible = false;
@@ -140,12 +140,12 @@ namespace ModernFlatUI
             // btnBackToDefine
             // 
             this.btnBackToDefine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBackToDefine.Location = new System.Drawing.Point(588, 401);
-            this.btnBackToDefine.Margin = new System.Windows.Forms.Padding(2, 2, 52, 32);
-            this.btnBackToDefine.MaximumSize = new System.Drawing.Size(112, 32);
-            this.btnBackToDefine.MinimumSize = new System.Drawing.Size(112, 32);
+            this.btnBackToDefine.Location = new System.Drawing.Point(784, 494);
+            this.btnBackToDefine.Margin = new System.Windows.Forms.Padding(3, 2, 69, 39);
+            this.btnBackToDefine.MaximumSize = new System.Drawing.Size(149, 39);
+            this.btnBackToDefine.MinimumSize = new System.Drawing.Size(149, 39);
             this.btnBackToDefine.Name = "btnBackToDefine";
-            this.btnBackToDefine.Size = new System.Drawing.Size(112, 32);
+            this.btnBackToDefine.Size = new System.Drawing.Size(149, 39);
             this.btnBackToDefine.TabIndex = 7;
             this.btnBackToDefine.Text = "Add New Item";
             this.btnBackToDefine.UseVisualStyleBackColor = true;
@@ -155,12 +155,12 @@ namespace ModernFlatUI
             // 
             this.btnChangeTheInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnChangeTheInfo.Enabled = false;
-            this.btnChangeTheInfo.Location = new System.Drawing.Point(434, 401);
-            this.btnChangeTheInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 32);
-            this.btnChangeTheInfo.MaximumSize = new System.Drawing.Size(150, 32);
-            this.btnChangeTheInfo.MinimumSize = new System.Drawing.Size(150, 32);
+            this.btnChangeTheInfo.Location = new System.Drawing.Point(579, 494);
+            this.btnChangeTheInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 39);
+            this.btnChangeTheInfo.MaximumSize = new System.Drawing.Size(200, 39);
+            this.btnChangeTheInfo.MinimumSize = new System.Drawing.Size(200, 39);
             this.btnChangeTheInfo.Name = "btnChangeTheInfo";
-            this.btnChangeTheInfo.Size = new System.Drawing.Size(150, 32);
+            this.btnChangeTheInfo.Size = new System.Drawing.Size(200, 39);
             this.btnChangeTheInfo.TabIndex = 8;
             this.btnChangeTheInfo.Text = "Change The Product Info";
             this.btnChangeTheInfo.UseVisualStyleBackColor = true;
@@ -170,12 +170,12 @@ namespace ModernFlatUI
             // 
             this.btnDeleteTheProduct.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDeleteTheProduct.Enabled = false;
-            this.btnDeleteTheProduct.Location = new System.Drawing.Point(280, 401);
-            this.btnDeleteTheProduct.Margin = new System.Windows.Forms.Padding(2, 2, 2, 32);
-            this.btnDeleteTheProduct.MaximumSize = new System.Drawing.Size(150, 32);
-            this.btnDeleteTheProduct.MinimumSize = new System.Drawing.Size(150, 32);
+            this.btnDeleteTheProduct.Location = new System.Drawing.Point(373, 494);
+            this.btnDeleteTheProduct.Margin = new System.Windows.Forms.Padding(3, 2, 3, 39);
+            this.btnDeleteTheProduct.MaximumSize = new System.Drawing.Size(200, 39);
+            this.btnDeleteTheProduct.MinimumSize = new System.Drawing.Size(200, 39);
             this.btnDeleteTheProduct.Name = "btnDeleteTheProduct";
-            this.btnDeleteTheProduct.Size = new System.Drawing.Size(150, 32);
+            this.btnDeleteTheProduct.Size = new System.Drawing.Size(200, 39);
             this.btnDeleteTheProduct.TabIndex = 9;
             this.btnDeleteTheProduct.Text = "Delete The Product";
             this.btnDeleteTheProduct.UseVisualStyleBackColor = true;
@@ -183,16 +183,16 @@ namespace ModernFlatUI
             // 
             // ProductList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(760, 474);
+            this.ClientSize = new System.Drawing.Size(1013, 583);
             this.Controls.Add(this.btnDeleteTheProduct);
             this.Controls.Add(this.btnChangeTheInfo);
             this.Controls.Add(this.btnBackToDefine);
             this.Controls.Add(this.btnOpenTheDescription);
             this.Controls.Add(this.dgvProductList);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ProductList";
             this.Text = "ProductList";
             this.Load += new System.EventHandler(this.ProductList_Load);

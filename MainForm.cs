@@ -225,16 +225,16 @@ namespace ModernFlatUI
         private void btnCashRegister_Click(object sender, EventArgs e)
         {
 
-            if (File.ReadAllLines(@"OldProductList.txt").Length == 0)
+            /*if (File.ReadAllLines(@"OldProductList.txt").Length == 0)
             {
                 MessageBox.Show(@"Please, define the product first!");
-            }
-            else
+            }*/
+            
             {
                 HideSubMenu();
                 pnlMain.Controls.Clear();
                 RefreshCashRegisterSystemFromTheStart();
-                FrmForm1.button3.Enabled = File.ReadAllLines(@"OldProductList.txt").Length != 0;
+                //FrmForm1.button3.Enabled = File.ReadAllLines(@"OldProductList.txt").Length != 0;
                 if (FrmForm1.txtName.Text == "")
                     FrmForm1.textBox1.ReadOnly = true;
                 ShowFormCashRegisterSystem();
