@@ -32,7 +32,6 @@ namespace ModernFlatUI
         public int a = 1;
         string b = "";
         double fulltotal;
-        public string exceptword = "Not Availabale";
 
 
 
@@ -40,13 +39,6 @@ namespace ModernFlatUI
         readonly DataTable ordertable = new DataTable();
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (!File.Exists(@"ram.txt"))
-            {
-                using (var sw = File.CreateText(@"ram.txt"))
-                {
-                    fakevar = 2;
-                }
-            }
 
             FormClosing += Form1_Closing;
             button1.Click += button1_Click;
@@ -57,7 +49,6 @@ namespace ModernFlatUI
                         new DataColumn("Description", typeof(string))});
 
             dataEditWindow.DataSource = table;
-            dataEditWindow.DataSource = table;
             dataEditWindow.AllowUserToAddRows = false;
             dataEditWindow.Columns["Description"].Visible = false;
 
@@ -65,7 +56,6 @@ namespace ModernFlatUI
                         new DataColumn("Price", typeof(string)),
                         new DataColumn("Amount", typeof(string)),
                         new DataColumn("RowNum", typeof(string))});
-            dataOrderWindow.DataSource = ordertable;
             dataOrderWindow.DataSource = ordertable;
             dataOrderWindow.AllowUserToAddRows = false;
 
@@ -114,8 +104,8 @@ namespace ModernFlatUI
                 dataEditWindow.DataSource = bSource;
 
 
-
-            } catch(MySql.Data.MySqlClient.MySqlException ex)
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -128,7 +118,6 @@ namespace ModernFlatUI
             {
                 textBox1.ReadOnly = false;
             }
-
 
             button2.Enabled = false;
             textBox1.Text = "";
@@ -145,18 +134,9 @@ namespace ModernFlatUI
             b = row.Cells[1].Value.ToString();
             txtPrice.Text = row.Cells[1].Value.ToString();
             txtAmount.Text = row.Cells[2].Value.ToString();
-            
-            var cmcExCheck = string.Equals(exceptword, txtAmount.Text, StringComparison.InvariantCulture);
-            if (cmcExCheck)
-            {
-                textBox1.Enabled = false;
-                button2.Enabled = false;
-                button1.Enabled = false;
-            } else
-            {
+
                 button2.Enabled = true;
                 button1.Enabled = true;
-            }
             var totam = textBox1.Text;
             var b1 = string.IsNullOrEmpty(totam);
             if (b1)
@@ -169,23 +149,23 @@ namespace ModernFlatUI
                 total1st = int.Parse(textBox1.Text);
                 total2st = double.Parse(txtPrice.Text);
                 totalsum = total1st * total2st;
-                total.Text =  $@"{totalsum}";
+                total.Text = $@"{totalsum}";
             }
             if (txtAmount.Text == "Not available")
             {
                 textBox1.Enabled = false;
                 button2.Enabled = false;
                 button3.Enabled = false;
-        }
+            }
             if (dataOrderWindow.Rows.Count == 0)
-        {
+            {
                 button1.Enabled = false;
-        }
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-           
+
         }
 
 
@@ -194,7 +174,7 @@ namespace ModernFlatUI
 
             var totam = textBox1.Text;
             var b1 = string.IsNullOrEmpty(totam);
-           
+
             if (b1)
             {
                 total.Text = @"0";
@@ -204,33 +184,32 @@ namespace ModernFlatUI
             else
             {
                 int exzero1stvalue = totam.IndexOf('0');
-                
+
                 if (int.Parse(textBox1.Text) > int.Parse(txtAmount.Text))
                 {
                     MessageBox.Show(@"Your value is out of the range of available items!");
                     button2.Enabled = false;
                 }
-                else 
-                { if(exzero1stvalue == 0)
+                else
+                {
+                    if (exzero1stvalue == 0)
                     {
                         button2.Enabled = false;
                         button1.Enabled = false;
-                    } else { 
-                    button2.Enabled = true;
-                    total1st = int.Parse(textBox1.Text);
-                    total2st = double.Parse(txtPrice.Text); 
-                    totalsum = total1st * total2st;
-                    total.Text = $@"{totalsum}";
+                    }
+                    else
+                    {
+                        button2.Enabled = true;
+                        total1st = int.Parse(textBox1.Text);
+                        total2st = double.Parse(txtPrice.Text);
+                        totalsum = total1st * total2st;
+                        total.Text = $@"{totalsum}";
                     }
                 }
             }
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void AddToTop10Products()
         {
@@ -254,7 +233,7 @@ namespace ModernFlatUI
                 }
             }
 
-            var lineToEdit = 0; 
+            var lineToEdit = 0;
             for (var i = 0; i < dataOrderWindow.RowCount; i++)
             {
                 var amountOfTheProduct = dataOrderWindow.Rows[i].Cells[2].Value.ToString();
@@ -297,8 +276,6 @@ namespace ModernFlatUI
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            var columnIndexR = dataEditWindow.CurrentCell.ColumnIndex;
-            var rowIndexR = dataEditWindow.CurrentCell.RowIndex;
 
             MySql.Data.MySqlClient.MySqlConnection conn;
             conn = new MySql.Data.MySqlClient.MySqlConnection();
@@ -320,7 +297,7 @@ namespace ModernFlatUI
                 conn.Open();
                 if (clonedoubleavoid == 0)
                 {
-                    
+
                     string querycleaning = "DELETE FROM productlistdataram;";
                     MySqlCommand clearingthetable = new MySqlCommand(querycleaning, conn);
                     clearingthetable.ExecuteNonQuery();
@@ -328,7 +305,7 @@ namespace ModernFlatUI
                     string queryclone = "INSERT INTO productlistdataram SELECT * FROM productlistdata;";
                     MySqlCommand clone = new MySqlCommand(queryclone, conn);
                     clone.ExecuteNonQuery();
-            }
+                }
 
                 //updating info
                 int available = int.Parse(txtAmount.Text);
@@ -336,13 +313,14 @@ namespace ModernFlatUI
                 string queryupdate;
                 available = available - buying;
                 MessageBox.Show($"" + available);
-                if(available == 0)
+                if (available == 0)
                 {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='Not available' WHERE NAME = '" + txtName.Text + "';";
-                } else
-            {
+                }
+                else
+                {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='" + available + "' WHERE NAME = '" + txtName.Text + "';";
-            }
+                }
 
                 MySqlCommand updatedata = new MySqlCommand(queryupdate, conn);
                 updatedata.ExecuteNonQuery();
@@ -364,12 +342,10 @@ namespace ModernFlatUI
 
 
 
-            } catch(MySql.Data.MySqlClient.MySqlException ex)
-                {
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
                 MessageBox.Show(ex.Message);
-                }
-                ordertable.Rows.Add(row);
-                a++;
             }
 
             clonedoubleavoid++;
@@ -408,27 +384,22 @@ namespace ModernFlatUI
             if (MessageBox.Show("Are you sure you want to quit?", "My Application", MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 e.Cancel = true;
-            } else
+            }
+            else
             {
                 File.WriteAllText(@"ram.txt", string.Empty);
                 ordertable?.Clear();
                 fulltotal = 0;
             }
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (fakevar != 1)
             {
-                const string dir = @"Receipts";
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                    continue;
-                }
 
-                
+
                 MySql.Data.MySqlClient.MySqlConnection conn;
                 conn = new MySql.Data.MySqlClient.MySqlConnection();
                 int maxid = 0;
@@ -449,14 +420,14 @@ namespace ModernFlatUI
                     }
                     maxid++;//id that is used in db
                     for (int i = 0; i < dataOrderWindow.Rows.Count; i++)
-                            {
+                    {
                         string pricedecimal = $"" + dataOrderWindow.Rows[i].Cells[1].Value;
                         pricedecimal = pricedecimal.Replace(',', '.');
                         string querysendingData = $"INSERT INTO receipts (ORDERID, NAME, PRICE, AMOUNT)VALUES(" + maxid + ", '" + dataOrderWindow.Rows[i].Cells[0].Value + "', " + pricedecimal + ", '" + dataOrderWindow.Rows[i].Cells[2].Value + "');";
 
                         MySqlCommand sendingData = new MySqlCommand(querysendingData, conn);
                         sendingData.ExecuteNonQuery();
-                }
+                    }
 
                     //sending dataandtime and total to db
                     string fulltotaldecimal = $"" + FullTotal.Text;
@@ -474,30 +445,26 @@ namespace ModernFlatUI
                     mainclone.ExecuteNonQuery();
                 }
                 catch (MySql.Data.MySqlClient.MySqlException ex)
-                    {
+                {
                     MessageBox.Show(ex.Message);
-                    }
-                conn.Close();
                 }
+                conn.Close();
+            }
 
-            
+
 
             //fakevar to prevent double start of the function
-                fakevar++;
-                if (fakevar == 2)
-                {
-                    fakevar = 0;
-                    ordertable?.Clear();
-                    fulltotal = 0;
-                    FullTotal.Clear();
-                    button4_Click(sender, e);
+            fakevar++;
+            if (fakevar == 2)
+            {
+                fakevar = 0;
+                ordertable?.Clear();
+                fulltotal = 0;
+                FullTotal.Clear();
+                button4_Click(sender, e);
                 clonedoubleavoid = 0;
-                }
-
-                button3_Click(sender, e);
-
-                break;
             }
+
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -525,7 +492,7 @@ namespace ModernFlatUI
                 }
             }
         }
-
+        //f
         private void dataEditWindow_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
