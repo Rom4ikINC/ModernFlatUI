@@ -14,6 +14,7 @@ namespace ModernFlatUI
 
         static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
 
+
         public static string PathTop10ProductsFile = Environment.CurrentDirectory + "\\Reports\\Top10\\Top10Products.txt";
 
         internal static Form1 FrmForm1;
@@ -24,6 +25,7 @@ namespace ModernFlatUI
             FrmForm1 = this;
         }
         int fakevar;
+        int clonedoubleavoid = 0;
         double totalsum;
         double total1st;
         double total2st;
@@ -31,6 +33,8 @@ namespace ModernFlatUI
         string b = "";
         double fulltotal;
         public string exceptword = "Not Availabale";
+
+
 
         public DataTable table = new DataTable();
         readonly DataTable ordertable = new DataTable();
@@ -76,7 +80,7 @@ namespace ModernFlatUI
                 col.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
 
-            button1.Enabled = new FileInfo(Environment.CurrentDirectory + "\\ram.txt").Length != 0;
+            button1.Enabled = false;
 
         }
 
@@ -94,6 +98,7 @@ namespace ModernFlatUI
 
             try
             {
+                //downloading data for the first time from the main db
                 conn.ConnectionString = myConnectionString;
                 conn.Open();
                 string sql = "SELECT NAME, PRICE, AMOUNT FROM productlistdata ";
@@ -114,61 +119,7 @@ namespace ModernFlatUI
             {
                 MessageBox.Show(ex.Message);
             }
-
-
-
-
-
-
-            /*var exceptlines = File.ReadAllLines(@"OldProductList.txt");
-            string[] exceptvalues;
-            
-            for(var i = 0; i < exceptlines.Length; i++)
-            {
-
-                exceptvalues = exceptlines[i].Split('/');
-                var intexval = 0;
-
-                for (var j = 0; j < exceptvalues.Length; j++)
-                {
-                    var exceptionvalue = exceptvalues[2];
-                    
-                    var exceptbool = string.Equals(exceptionvalue, exceptword, StringComparison.InvariantCulture);
-                    if (exceptbool)
-                    {
-
-                    } else { 
-                        intexval = int.Parse(exceptionvalue);
-                    }
-
-                    if (intexval > 0) continue;
-                    exceptvalues[2] = "Not Availabale";
-                    var exceptresult = string.Join("/", exceptvalues);
-
-                    exceptlines[i] = exceptresult;
-                    File.WriteAllText(@"OldProductList.txt", string.Join("\n", exceptlines));
-                }
-            }
-            
-            var lines = File.ReadAllLines(@"OldProductList.txt");
-            string[] values;
-
-            foreach (var line in lines)
-            {
-                values = line.Split('/');
-                var row = new string[values.Length];
-
-                for (var j = 0; j < values.Length; j++)
-                {
-                    row[j] = values[j].Trim();
-                }
-
-                table?.Rows.Add(row);
-                a++;
-            }*/
-
-
-
+            conn.Close();
 
             txtName.Text = dataEditWindow.Rows[0].Cells[0].Value.ToString();
             txtAmount.Text = dataEditWindow.Rows[0].Cells[2].Value.ToString();
@@ -194,6 +145,7 @@ namespace ModernFlatUI
             b = row.Cells[1].Value.ToString();
             txtPrice.Text = row.Cells[1].Value.ToString();
             txtAmount.Text = row.Cells[2].Value.ToString();
+            
             var cmcExCheck = string.Equals(exceptword, txtAmount.Text, StringComparison.InvariantCulture);
             if (cmcExCheck)
             {
@@ -203,7 +155,7 @@ namespace ModernFlatUI
             } else
             {
                 button2.Enabled = true;
-                button1.Enabled = new FileInfo(Environment.CurrentDirectory + "\\ram.txt").Length != 0;
+                button1.Enabled = true;
             }
             var totam = textBox1.Text;
             var b1 = string.IsNullOrEmpty(totam);
@@ -219,13 +171,16 @@ namespace ModernFlatUI
                 totalsum = total1st * total2st;
                 total.Text =  $@"{totalsum}";
             }
+            if (txtAmount.Text == "Not available")
+            {
+                textBox1.Enabled = false;
+                button2.Enabled = false;
+                button3.Enabled = false;
         }
-
-
-
-        private void label4_Click(object sender, EventArgs e)
+            if (dataOrderWindow.Rows.Count == 0)
         {
-
+                button1.Enabled = false;
+        }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -249,6 +204,7 @@ namespace ModernFlatUI
             else
             {
                 int exzero1stvalue = totam.IndexOf('0');
+                
                 if (int.Parse(textBox1.Text) > int.Parse(txtAmount.Text))
                 {
                     MessageBox.Show(@"Your value is out of the range of available items!");
@@ -344,43 +300,89 @@ namespace ModernFlatUI
             var columnIndexR = dataEditWindow.CurrentCell.ColumnIndex;
             var rowIndexR = dataEditWindow.CurrentCell.RowIndex;
 
-
-            ordertable?.Clear();
-            const string fileName = @"ram.txt";
-            if (!File.Exists(fileName))
+            MySql.Data.MySqlClient.MySqlConnection conn;
+            conn = new MySql.Data.MySqlClient.MySqlConnection();
+            try
             {
-                using (var sw = File.CreateText(fileName))
+                if (dataEditWindow.CurrentRow == null)
+                    return;
+                //coping data from the 1st datagridview
+                foreach (DataGridViewRow row in dataEditWindow.SelectedRows)
                 {
-                    fakevar = 2;
+                    ((DataTable)dataOrderWindow.DataSource).ImportRow(((DataRowView)row.DataBoundItem).Row);
+
                 }
-            }
-            var Path = Environment.CurrentDirectory + "\\ram.txt";
-            using (var OrderList = File.AppendText(fileName))
-            {
-                OrderList.WriteLine(GetTheOrder());
-            }
+                //changing the last cell value
+                dataOrderWindow.Rows[dataOrderWindow.Rows.Count - 1].Cells[2].Value = textBox1.Text;
 
-            var lines2 = File.ReadAllLines(@"ram.txt");
-
-            foreach (var line in lines2)
-            {
-                var values2 = line.Split('/');
-                var row = new string[values2.Length];
-
-                for (var j = 0; j < values2.Length; j++)
+                //cloning db to tempdb
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+                if (clonedoubleavoid == 0)
                 {
-                    row[j] = values2[j].Trim();
+                    
+                    string querycleaning = "DELETE FROM productlistdataram;";
+                    MySqlCommand clearingthetable = new MySqlCommand(querycleaning, conn);
+                    clearingthetable.ExecuteNonQuery();
+
+                    string queryclone = "INSERT INTO productlistdataram SELECT * FROM productlistdata;";
+                    MySqlCommand clone = new MySqlCommand(queryclone, conn);
+                    clone.ExecuteNonQuery();
+            }
+
+                //updating info
+                int available = int.Parse(txtAmount.Text);
+                int buying = int.Parse(textBox1.Text);
+                string queryupdate;
+                available = available - buying;
+                MessageBox.Show($"" + available);
+                if(available == 0)
+                {
+                    queryupdate = $"UPDATE productlistdataram SET AMOUNT='Not available' WHERE NAME = '" + txtName.Text + "';";
+                } else
+            {
+                    queryupdate = $"UPDATE productlistdataram SET AMOUNT='" + available + "' WHERE NAME = '" + txtName.Text + "';";
+            }
+
+                MySqlCommand updatedata = new MySqlCommand(queryupdate, conn);
+                updatedata.ExecuteNonQuery();
+
+                //downloading new data from productlistdataram table to dataEditWindow
+                table?.Clear();
+
+                string sqlload = "SELECT NAME, PRICE, AMOUNT FROM productlistdataram ";
+                MySqlDataAdapter da = new MySqlDataAdapter();
+
+                da.SelectCommand = new MySqlCommand(sqlload, conn);
+
+                DataTable table1 = new DataTable();
+                da.Fill(table1);
+                BindingSource bSource = new BindingSource();
+                bSource.DataSource = table1;
+
+                dataEditWindow.DataSource = bSource;
+
+
+
+            } catch(MySql.Data.MySqlClient.MySqlException ex)
+                {
+                MessageBox.Show(ex.Message);
                 }
                 ordertable.Rows.Add(row);
                 a++;
             }
+
+            clonedoubleavoid++;
+            button3.Enabled = false;
+            txtAmount.Clear();
+            textBox1.Enabled = false;
 
             fulltotal += totalsum;
             FullTotal.Text = $"{fulltotal}";
             textBox1.Clear();
             total.Text = "0";
 
-            button1.Enabled = new FileInfo(@"ram.txt").Length != 0;
+            button1.Enabled = true;
 
         }
 
@@ -391,11 +393,14 @@ namespace ModernFlatUI
 
         private void button4_Click(object sender, EventArgs e)
         {
+            clonedoubleavoid = 0;
             File.WriteAllText(@"ram.txt", string.Empty);
             ordertable?.Clear();
             fulltotal = 0;
             FullTotal.Clear();
-            button1.Enabled = new FileInfo(@"ram.txt").Length != 0;
+            button1.Enabled = false;
+            button3.Enabled = true;
+            button3.PerformClick();
         }
 
         private void Form1_Closing(object sender, CancelEventArgs e)
@@ -414,7 +419,7 @@ namespace ModernFlatUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            while (true)
+            if (fakevar != 1)
             {
                 const string dir = @"Receipts";
                 if (!Directory.Exists(dir))
@@ -423,68 +428,61 @@ namespace ModernFlatUI
                     continue;
                 }
 
-                var nameofthefile = dir + "\\" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss", new CultureInfo("en-US")) + ".txt";
-                using (TextWriter tw = new StreamWriter(nameofthefile))
+                
+                MySql.Data.MySqlClient.MySqlConnection conn;
+                conn = new MySql.Data.MySqlClient.MySqlConnection();
+                int maxid = 0;
+                try
                 {
-                    var grandtotal = "Total: " + FullTotal.Text; 
-                    //var idOfTheFile = Directory.GetFiles(dir).Length;
-                    tw.WriteLine(grandtotal);
-                    //tw.WriteLine(idOfTheFile);
-                    const string instruction = "The information below is NAME | PRICE | AMOUNT | ID NUMBER IN THE TABLE";
-                    tw.WriteLine(instruction);
-                    for (var i = 0; i < dataOrderWindow.Rows.Count; i++)
+                    conn.ConnectionString = myConnectionString;
+                    conn.Open();
+                    //receiving the max id from db
+                    string querymaxid = "SELECT COALESCE(MAX(ORDERID), 0)FROM receipts;";
+                    MySqlCommand command = new MySqlCommand(querymaxid, conn);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
                     {
-                        for (var j = 0; j < dataOrderWindow.Columns.Count; j++)
-                        {
-                            tw.Write($"{dataOrderWindow.Rows[i].Cells[j].Value}");
+                        reader.Read();
+                        maxid = reader.GetInt32(0);
+                        reader.Close();
 
-                            if (j != dataOrderWindow.Columns.Count - 1)
+                    }
+                    maxid++;//id that is used in db
+                    for (int i = 0; i < dataOrderWindow.Rows.Count; i++)
                             {
-                                tw.Write("/");
-                            }
-                        }
+                        string pricedecimal = $"" + dataOrderWindow.Rows[i].Cells[1].Value;
+                        pricedecimal = pricedecimal.Replace(',', '.');
+                        string querysendingData = $"INSERT INTO receipts (ORDERID, NAME, PRICE, AMOUNT)VALUES(" + maxid + ", '" + dataOrderWindow.Rows[i].Cells[0].Value + "', " + pricedecimal + ", '" + dataOrderWindow.Rows[i].Cells[2].Value + "');";
 
-                        tw.WriteLine();
-                    }
+                        MySqlCommand sendingData = new MySqlCommand(querysendingData, conn);
+                        sendingData.ExecuteNonQuery();
                 }
 
-                var orderListFileLines = File.ReadAllLines(@"ram.txt");
-                const string pathOldProductFile = @"OldProductList.txt";
-                const string pathNewProductFile = @"NewProductList.txt";
+                    //sending dataandtime and total to db
+                    string fulltotaldecimal = $"" + FullTotal.Text;
+                    fulltotaldecimal = fulltotaldecimal.Replace(',', '.');
+                    string querytotal = $"INSERT INTO totalandtime (ORDERID, TOTAL, created_at)VALUES(" + maxid + ", '" + fulltotaldecimal + "', NOW());";
+                    MySqlCommand sendtotal = new MySqlCommand(querytotal, conn);
+                    sendtotal.ExecuteNonQuery();//to finish the send method
 
-                File.Copy(pathOldProductFile, pathNewProductFile, true);
-
-                if (fakevar != 1)
-                {
-                    for (var i = 0; i <= orderListFileLines.Length - 1; i++)
+                    //next step is to apply the changes from ram to main db
+                    string querymaincleaning = "DELETE FROM productlistdata;";
+                    MySqlCommand mainclearingthetable = new MySqlCommand(querymaincleaning, conn);
+                    mainclearingthetable.ExecuteNonQuery();
+                    string querymainclone = "INSERT INTO productlistdata SELECT * FROM productlistdataram;";
+                    MySqlCommand mainclone = new MySqlCommand(querymainclone, conn);
+                    mainclone.ExecuteNonQuery();
+                }
+                catch (MySql.Data.MySqlClient.MySqlException ex)
                     {
-                        var orderListFileValues = orderListFileLines[i].Split('/');
-                        var currentamount = orderListFileValues[2];
-                        var currentstringId = orderListFileValues[3];
-
-                        var id = int.Parse(currentstringId);
-
-                        var pathNewProductFileLines = File.ReadAllLines(@"NewProductList.txt");
-
-                        var pathNewProductFileValues = pathNewProductFileLines[id].Split('/');
-                        var oldamount = pathNewProductFileValues[2];
-                        var intoldamount = int.Parse(oldamount);
-                        var intcurrentamount = int.Parse(currentamount);
-                        var inttotal = intoldamount - intcurrentamount;
-
-                        pathNewProductFileValues[2] = inttotal.ToString();
-
-                        var result = string.Join("/", pathNewProductFileValues);
-
-                        pathNewProductFileLines[id] = result;
-                        File.WriteAllText(@"NewProductList.txt", string.Join("\n", pathNewProductFileLines));
+                    MessageBox.Show(ex.Message);
                     }
+                conn.Close();
                 }
 
-                if (fakevar != 1)
-                    AddToTop10Products();
+            
 
-                File.Copy(pathNewProductFile, pathOldProductFile, true);
+            //fakevar to prevent double start of the function
                 fakevar++;
                 if (fakevar == 2)
                 {
@@ -493,6 +491,7 @@ namespace ModernFlatUI
                     fulltotal = 0;
                     FullTotal.Clear();
                     button4_Click(sender, e);
+                clonedoubleavoid = 0;
                 }
 
                 button3_Click(sender, e);

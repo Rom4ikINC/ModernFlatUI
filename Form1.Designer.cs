@@ -273,7 +273,6 @@ namespace ModernFlatUI
             this.label4.Size = new System.Drawing.Size(40, 13);
             this.label4.TabIndex = 13;
             this.label4.Text = "Basket";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // button4
             // 
@@ -307,7 +306,6 @@ namespace ModernFlatUI
             this.label7.Size = new System.Drawing.Size(34, 13);
             this.label7.TabIndex = 5;
             this.label7.Text = "Total:";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // Form1
             // 
