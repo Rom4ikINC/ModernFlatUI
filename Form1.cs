@@ -13,7 +13,7 @@ namespace ModernFlatUI
     {
 
         static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
-        
+
 
         public static string PathTop10ProductsFile = Environment.CurrentDirectory + "\\Reports\\Top10\\Top10Products.txt";
 
@@ -40,6 +40,13 @@ namespace ModernFlatUI
         readonly DataTable ordertable = new DataTable();
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (!File.Exists(@"ram.txt"))
+            {
+                using (var sw = File.CreateText(@"ram.txt"))
+                {
+                    fakevar = 2;
+                }
+            }
 
             FormClosing += Form1_Closing;
             button1.Click += button1_Click;
@@ -50,6 +57,7 @@ namespace ModernFlatUI
                         new DataColumn("Description", typeof(string))});
 
             dataEditWindow.DataSource = table;
+            dataEditWindow.DataSource = table;
             dataEditWindow.AllowUserToAddRows = false;
             dataEditWindow.Columns["Description"].Visible = false;
 
@@ -57,6 +65,7 @@ namespace ModernFlatUI
                         new DataColumn("Price", typeof(string)),
                         new DataColumn("Amount", typeof(string)),
                         new DataColumn("RowNum", typeof(string))});
+            dataOrderWindow.DataSource = ordertable;
             dataOrderWindow.DataSource = ordertable;
             dataOrderWindow.AllowUserToAddRows = false;
 
@@ -103,7 +112,8 @@ namespace ModernFlatUI
                 bSource.DataSource = table;
 
                 dataEditWindow.DataSource = bSource;
-         
+
+
 
             } catch(MySql.Data.MySqlClient.MySqlException ex)
             {
@@ -118,6 +128,7 @@ namespace ModernFlatUI
             {
                 textBox1.ReadOnly = false;
             }
+
 
             button2.Enabled = false;
             textBox1.Text = "";
@@ -165,11 +176,11 @@ namespace ModernFlatUI
                 textBox1.Enabled = false;
                 button2.Enabled = false;
                 button3.Enabled = false;
-            }
+        }
             if (dataOrderWindow.Rows.Count == 0)
-            {
+        {
                 button1.Enabled = false;
-            }
+        }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -216,6 +227,10 @@ namespace ModernFlatUI
 
         }
 
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
 
         private void AddToTop10Products()
         {
@@ -282,7 +297,9 @@ namespace ModernFlatUI
         }
         private void button2_Click(object sender, EventArgs e)
         {
-            
+            var columnIndexR = dataEditWindow.CurrentCell.ColumnIndex;
+            var rowIndexR = dataEditWindow.CurrentCell.RowIndex;
+
             MySql.Data.MySqlClient.MySqlConnection conn;
             conn = new MySql.Data.MySqlClient.MySqlConnection();
             try
@@ -311,7 +328,7 @@ namespace ModernFlatUI
                     string queryclone = "INSERT INTO productlistdataram SELECT * FROM productlistdata;";
                     MySqlCommand clone = new MySqlCommand(queryclone, conn);
                     clone.ExecuteNonQuery();
-                }
+            }
 
                 //updating info
                 int available = int.Parse(txtAmount.Text);
@@ -323,10 +340,10 @@ namespace ModernFlatUI
                 {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='Not available' WHERE NAME = '" + txtName.Text + "';";
                 } else
-                {
+            {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='" + available + "' WHERE NAME = '" + txtName.Text + "';";
-                }
-                
+            }
+
                 MySqlCommand updatedata = new MySqlCommand(queryupdate, conn);
                 updatedata.ExecuteNonQuery();
 
@@ -348,8 +365,11 @@ namespace ModernFlatUI
 
 
             } catch(MySql.Data.MySqlClient.MySqlException ex)
-            {
+                {
                 MessageBox.Show(ex.Message);
+                }
+                ordertable.Rows.Add(row);
+                a++;
             }
 
             clonedoubleavoid++;
@@ -401,6 +421,12 @@ namespace ModernFlatUI
         {
             if (fakevar != 1)
             {
+                const string dir = @"Receipts";
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                    continue;
+                }
 
                 
                 MySql.Data.MySqlClient.MySqlConnection conn;
@@ -423,14 +449,14 @@ namespace ModernFlatUI
                     }
                     maxid++;//id that is used in db
                     for (int i = 0; i < dataOrderWindow.Rows.Count; i++)
-                    {
+                            {
                         string pricedecimal = $"" + dataOrderWindow.Rows[i].Cells[1].Value;
                         pricedecimal = pricedecimal.Replace(',', '.');
                         string querysendingData = $"INSERT INTO receipts (ORDERID, NAME, PRICE, AMOUNT)VALUES(" + maxid + ", '" + dataOrderWindow.Rows[i].Cells[0].Value + "', " + pricedecimal + ", '" + dataOrderWindow.Rows[i].Cells[2].Value + "');";
 
                         MySqlCommand sendingData = new MySqlCommand(querysendingData, conn);
                         sendingData.ExecuteNonQuery();
-                    }
+                }
 
                     //sending dataandtime and total to db
                     string fulltotaldecimal = $"" + FullTotal.Text;
@@ -448,26 +474,30 @@ namespace ModernFlatUI
                     mainclone.ExecuteNonQuery();
                 }
                 catch (MySql.Data.MySqlClient.MySqlException ex)
-                {
+                    {
                     MessageBox.Show(ex.Message);
-                }
+                    }
                 conn.Close();
-            }
+                }
 
             
 
             //fakevar to prevent double start of the function
-            fakevar++;
-            if (fakevar == 2)
-            {
-                fakevar = 0;
-                ordertable?.Clear();
-                fulltotal = 0;
-                FullTotal.Clear();
-                button4_Click(sender, e);
+                fakevar++;
+                if (fakevar == 2)
+                {
+                    fakevar = 0;
+                    ordertable?.Clear();
+                    fulltotal = 0;
+                    FullTotal.Clear();
+                    button4_Click(sender, e);
                 clonedoubleavoid = 0;
-            }
+                }
 
+                button3_Click(sender, e);
+
+                break;
+            }
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
