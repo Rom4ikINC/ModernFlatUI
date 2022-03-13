@@ -32,6 +32,7 @@ namespace ModernFlatUI
         public int a = 1;
         string b = "";
         double fulltotal;
+        public string exceptword = "Not Available";
 
 
 
@@ -135,8 +136,18 @@ namespace ModernFlatUI
             txtPrice.Text = row.Cells[1].Value.ToString();
             txtAmount.Text = row.Cells[2].Value.ToString();
 
+            var cmcExCheck = string.Equals(exceptword, txtAmount.Text, StringComparison.InvariantCulture);
+            if (cmcExCheck)
+            {
+                textBox1.Enabled = false;
+                button2.Enabled = false;
+                button1.Enabled = false;
+            }
+            else
+            {
                 button2.Enabled = true;
                 button1.Enabled = true;
+            }
             var totam = textBox1.Text;
             var b1 = string.IsNullOrEmpty(totam);
             if (b1)
