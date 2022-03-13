@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using static ModernFlatUI.ProductList;
+using MySql.Data.MySqlClient;
 
 namespace ModernFlatUI
 {
@@ -16,8 +17,8 @@ namespace ModernFlatUI
     public partial class DefineTheProduct : Form
     {
 
-        public string Path = Environment.CurrentDirectory + "\\OldProductList.txt";
-        public string TempPath = Environment.CurrentDirectory + "\\TempFile.txt";
+        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
+
 
         internal static DefineTheProduct FrmDefineTheProduct;
 
@@ -27,12 +28,6 @@ namespace ModernFlatUI
             FrmDefineTheProduct = this;
         }
 
-        private string GetTheProduct()
-        {
-            
-            var productInfo =  txtbName.Text + '/' +  txtbPrice.Text  + '/' + nudQuantity.Text + '/' + txtbDescription.Text.Replace("\r", string.Empty).Replace("\n", @"\n");
-            return productInfo;
-        }
         public void ClearTheInfoInDefineTheProduct()
         {
             txtbName.Text = @"Name";
@@ -45,15 +40,31 @@ namespace ModernFlatUI
         {
 
         }
-
+        // Reading the info from the form and adding it to the SQL Table.
         private void btnAddTheProduct_Click(object sender, EventArgs e)
         {
-            using (var productsList = File.AppendText(Path))
+            MySqlConnection conn;
+            conn = new MySqlConnection();
+            try
             {
-                productsList.WriteLine(GetTheProduct());
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+                string queryChange = $"INSERT INTO productlistdata (NAME, PRICE, AMOUNT, DESCRIPTION) VALUES('" + txtbName.Text
+                                     + "', '" + txtbPrice.Text
+                                     + "', '" + nudQuantity.Text
+                                     + "', '" + txtbDescription.Text
+                                     + "');";
+                MySqlCommand changeProduct = new MySqlCommand(queryChange, conn);
+                changeProduct.ExecuteNonQuery();
+
+                changeProduct.Dispose();
+                conn.Close();
+            }
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             ProductList.FrmProductList.RefreshGrid();
-            
         }
 
         private void DefineTheProduct_Load(object sender, EventArgs e)
@@ -84,46 +95,39 @@ namespace ModernFlatUI
             MainForm.Mainform.ShowFormProductList();
             
         }
-
+        // Changes the info of the selected product.
         private void btnChangeTheProductInfo_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(Path))
-            {
-                using (var sw = File.CreateText(Path))
-                {
 
-                }
-            }
-
-            if (!File.Exists(TempPath))
-            {
-                using (var sw = File.CreateText(TempPath))
-                {
-
-                }
-            }
-
+            var productId = FrmProductList.dgvProductList.CurrentCell.RowIndex + 1;
             var rowIndex = FrmProductList.dgvProductList.CurrentCell.RowIndex;
 
             FrmProductList.products[rowIndex] =
                 new Product(txtbName.Text, txtbPrice.Text, nudQuantity.Text, txtbDescription.Text.Replace("\r", string.Empty).Replace("\n", @"\n"));
-
-
             var newLine = FrmProductList.products[rowIndex];
-            var lineToWrite = newLine.Name + '/' + newLine.Price + '/' + newLine.Quantity + '/' + newLine.Description;
-            var lineNumber = 0;
-            using (var reader = new StreamReader(Path))
-            using (var writer = new StreamWriter(TempPath))
+
+            MySqlConnection conn;
+            conn = new MySqlConnection();
+            try
             {
-                string line = null;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    writer.WriteLine(lineNumber == rowIndex ? lineToWrite : line);
-                    lineNumber++;
-                }
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+                string queryChange = $"UPDATE productlistdata SET NAME = '" + newLine.Name
+                                     + "', PRICE = '" + newLine.Price
+                                     + "', AMOUNT = '" + newLine.Quantity
+                                     + "', DESCRIPTION = '" + newLine.Description
+                                     + "' WHERE PRODUCTID = '" + productId + "';";
+                MySqlCommand changeProduct = new MySqlCommand(queryChange, conn);
+                changeProduct.ExecuteNonQuery();
+
+                changeProduct.Dispose();
+                conn.Close();
             }
-            var arrLine = File.ReadAllLines(TempPath);
-            File.WriteAllLines(Path, arrLine);
+            catch (MySql.Data.MySqlClient.MySqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             FrmProductList.dgvProductList.Rows.RemoveAt(rowIndex);
             FrmProductList.dgvProductList.Rows.Insert(rowIndex, newLine.Name, newLine.Price, newLine.Quantity, newLine.Description);
             FrmProductList.dgvProductList.Rows[rowIndex].Selected = true;
@@ -147,15 +151,12 @@ namespace ModernFlatUI
                 txtbDescription.SelectAll();
         }
 
-        string oldTextName = string.Empty;
-        string oldTextPrice = "0";
-
         private void txtbName_TextChanged(object sender, EventArgs e)
         {
             /*if (System.Text.RegularExpressions.Regex.IsMatch(txtbName.Text, "^[a-aA-Z ]")) return;
             MessageBox.Show(@"This field accepts only alphabetical characters!");
             txtbName.Text.Remove(txtbName.Text.Length - 1);*/
-
+            string oldTextName = string.Empty;
             if (txtbName.Text.All(chr => char.IsLetterOrDigit(chr) || chr == '-' || chr == ' '))
             {
                 oldTextName = txtbName.Text;

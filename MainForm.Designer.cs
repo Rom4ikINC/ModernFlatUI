@@ -60,7 +60,7 @@ namespace ModernFlatUI
             this.pnlSubMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSubMenu.Location = new System.Drawing.Point(0, 0);
             this.pnlSubMenu.Name = "pnlSubMenu";
-            this.pnlSubMenu.Size = new System.Drawing.Size(217, 620);
+            this.pnlSubMenu.Size = new System.Drawing.Size(217, 653);
             this.pnlSubMenu.TabIndex = 0;
             // 
             // pnlProductMaintenance
@@ -211,15 +211,15 @@ namespace ModernFlatUI
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(217, 0);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(867, 620);
+            this.pnlMain.Size = new System.Drawing.Size(1065, 653);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlMain_Paint);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1084, 620);
+            this.ClientSize = new System.Drawing.Size(1282, 653);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlSubMenu);
             this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -227,7 +227,7 @@ namespace ModernFlatUI
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(1100, 600);
+            this.MinimumSize = new System.Drawing.Size(1300, 700);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cassa";
