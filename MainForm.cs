@@ -12,6 +12,7 @@ using static ModernFlatUI.ProductList;
 using static ModernFlatUI.DefineTheProduct;
 using static ModernFlatUI.Form1;
 using static ModernFlatUI.Reports;
+using System.Threading;
 
 namespace ModernFlatUI
 {
@@ -86,67 +87,6 @@ namespace ModernFlatUI
 
         private void RefreshCashRegisterSystemFromTheStart()
         {
-            if (FrmForm1.a != 0)
-            {
-                FrmForm1.button3.Text = @"REFRESH";
-            }
-
-            FrmForm1.table?.Clear();
-            if (!File.Exists(@"OldProductList.txt"))
-            {
-                using (var sw = File.CreateText(@"OldProductList.txt"))
-                {
-
-                }
-            }
-            var exceptlines = File.ReadAllLines(@"OldProductList.txt");
-            string[] exceptvalues;
-
-            for (var i = 0; i < exceptlines.Length; i++)
-            {
-
-                exceptvalues = exceptlines[i].Split('/');
-                var intexval = 0;
-
-                for (var j = 0; j < exceptvalues.Length; j++)
-                {
-                    var exceptionvalue = exceptvalues[2];
-
-                    var exceptbool = string.Equals(exceptionvalue, FrmForm1.exceptword, StringComparison.InvariantCulture);
-                    if (exceptbool)
-                    {
-
-                    }
-                    else
-                    {
-                        intexval = int.Parse(exceptionvalue);
-                    }
-
-                    if (intexval > 0) continue;
-                    exceptvalues[2] = "Not Availabale";
-                    var exceptresult = string.Join("/", exceptvalues);
-
-                    exceptlines[i] = exceptresult;
-                    File.WriteAllText(@"OldProductList.txt", string.Join("\n", exceptlines));
-                }
-            }
-
-            var lines = File.ReadAllLines(@"OldProductList.txt");
-            string[] values;
-
-            foreach (var line in lines)
-            {
-                values = line.Split('/');
-                var row = new object[values.Length];
-
-                for (var j = 0; j < values.Length; j++)
-                {
-                    row[j] = values[j].Trim();
-                }
-
-                //FrmForm1.table?.Rows.Add(row);
-                FrmForm1.a++;
-            }
         }
 
         #region Reports
@@ -204,7 +144,9 @@ namespace ModernFlatUI
 
         private void btnListOfProducts_Click(object sender, EventArgs e)
         {
-            HideSubMenu();
+            //DO TIME OUT SO IT WON'T LOAD WITH A LAG
+           
+            // HideSubMenu();
             pnlMain.Controls.Clear();
             FrmProductList.products.Clear();
             FrmProductList.GetTheProductInfo();
@@ -225,16 +167,11 @@ namespace ModernFlatUI
         private void btnCashRegister_Click(object sender, EventArgs e)
         {
 
-            /*if (File.ReadAllLines(@"OldProductList.txt").Length == 0)
-            {
-                MessageBox.Show(@"Please, define the product first!");
-            }*/
             
             {
                 HideSubMenu();
                 pnlMain.Controls.Clear();
                 RefreshCashRegisterSystemFromTheStart();
-                //FrmForm1.button3.Enabled = File.ReadAllLines(@"OldProductList.txt").Length != 0;
                 if (FrmForm1.txtName.Text == "")
                     FrmForm1.textBox1.ReadOnly = true;
                 ShowFormCashRegisterSystem();
@@ -254,18 +191,11 @@ namespace ModernFlatUI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (!File.Exists(@"OldProductList.txt"))
-            {
-                using (var sw = File.CreateText(@"OldProductList.txt"))
-                {
-
-                }
-            }
+          
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            File.Create("ram.txt").Close();
 
         }
     }

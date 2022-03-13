@@ -29,8 +29,8 @@ namespace ModernFlatUI
         double totalsum;
         double total1st;
         double total2st;
-        public int a = 1;
         string b = "";
+        //public int WHATAREYOU = 1;
         double fulltotal;
         public string exceptword = "Not Availabale";
 

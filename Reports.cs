@@ -14,7 +14,6 @@ namespace ModernFlatUI
 {
     public partial class Reports : Form
     {
-
         public static string Path = Environment.CurrentDirectory + "\\Receipts";
         public static string ReportsFolderPath = Environment.CurrentDirectory + "\\Reports";
         public static string ReportPath = Environment.CurrentDirectory + "\\Report.txt";
@@ -22,8 +21,6 @@ namespace ModernFlatUI
         public static string PathTop10ProductsFolder = Environment.CurrentDirectory + "\\Reports\\Top10";
 
         internal static Reports FrmReports;
-
-        //string line = File.ReadLines(Path + "\\20-03-2021-17-06-55.txt").Skip(2).Take(1).First();
         private int _counter = 1; 
 
         public Reports()
