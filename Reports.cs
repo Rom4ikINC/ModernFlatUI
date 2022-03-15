@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +21,8 @@ namespace ModernFlatUI
         public static string PathTop10ProductsFile = Environment.CurrentDirectory + "\\Reports\\Top10\\Top10Products.txt";
         public static string PathTop10ProductsFolder = Environment.CurrentDirectory + "\\Reports\\Top10";
 
+        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
+
         internal static Reports FrmReports;
         private int _counter = 1; 
 
@@ -31,32 +34,6 @@ namespace ModernFlatUI
 
         private void Reports_Load(object sender, EventArgs e)
         {
-            if (!Directory.Exists(Path))
-            {
-                Directory.CreateDirectory(Path);
-            }
-
-            if (!Directory.Exists(ReportsFolderPath))
-            {
-                Directory.CreateDirectory(ReportsFolderPath);
-            }
-
-            if (!Directory.Exists(PathTop10ProductsFolder))
-            {
-                Directory.CreateDirectory(PathTop10ProductsFolder);
-            }
-
-            if (!File.Exists(PathTop10ProductsFile))
-            {
-                using (var sw = File.CreateText(PathTop10ProductsFile))
-                {
-                    var sr = File.ReadAllLines(@"OldProductList.txt");
-                    foreach (var line in sr)
-                    {
-                        sw.WriteLine(line.Split('/')[0] + '/' + '0');
-                    }
-                }
-            }
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -77,6 +54,7 @@ namespace ModernFlatUI
 
         private void btnMakeTheReport_Click(object sender, EventArgs e)
         {
+            // NEED TO CHANGE ACCORDING TO SQL BASED TASK
             if (Directory.GetFiles(Path).Length == 0)
             {
                 MessageBox.Show("Please, make the purchase first!");
@@ -246,67 +224,49 @@ namespace ModernFlatUI
                 btnMakeTheReport.Enabled = false;*/
         }
 
-        public void GetTop10()
+        public int[] GetTop10()
         {
-            if (!Directory.Exists(ReportsFolderPath))
-            {
-                Directory.CreateDirectory(ReportsFolderPath);
-            }
+            int quantityOfProduct = 0;
+            var startDate = dtpStartDate.Text;
+            var endDate = dtpEndDate.Text;
 
-            if (!Directory.Exists(PathTop10ProductsFolder))
+            MySqlConnection conn;
+            MySqlCommand selectCommand;
+            MySqlDataReader dataReader;
+            conn = new MySqlConnection();
+            try
             {
-                Directory.CreateDirectory(PathTop10ProductsFolder);
-            }
+                conn.ConnectionString = myConnectionString;
+                conn.Open();
+                string querySelect = $"SELECT COUNT(PRODUCTID) FROM productlistdata;";
+                /*selectCommand = new MySqlCommand(querySelect, conn);
+                dataReader = selectCommand.ExecuteReader();
+                quantityOfProduct = dataReader.GetInt32(0);*/
+                int[] products = new int[17];
 
-            if (!File.Exists(PathTop10ProductsFile) || File.ReadAllLines(PathTop10ProductsFile).Length == 0)
-            {
-                using (var sw = File.CreateText(PathTop10ProductsFile))
+                querySelect = $"SELECT pl.PRODUCTID, SUM(r.AMOUNT) FROM receipts r INNER JOIN productlistdata pl ON pl.NAME = r.NAME "
+                    + "INNER JOIN totalandtime tat ON tat.ORDERID = r.ORDERID WHERE tat.created_at BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY pl.PRODUCTID; ";
+                selectCommand = new MySqlCommand(querySelect, conn);
+                dataReader = selectCommand.ExecuteReader();
+
+                while (dataReader.Read())
                 {
-                    var sr = File.ReadAllLines(@"OldProductList.txt");
-                    foreach (var line in sr)
-                    {
-                        sw.WriteLine(line.Split('/')[0] + '/' + '0');
-                    }
+                    products[dataReader.GetInt32(0) - 1] += dataReader.GetInt32(1);
                 }
+                return products; // NEED TO CHANGE TO LIST SO YOU CAN REMOVE PRODUCTS WITH 0 BUYS AND ADD NAME OF THE PRODUCTS ALSO!
             }
-
-            var top10 = File.ReadAllLines(PathTop10ProductsFile);
-            if (top10.Length == 0)
+            catch (MySql.Data.MySqlClient.MySqlException ex)
             {
-                MessageBox.Show(@"Please, make the purchase first!");
-                return;
+                MessageBox.Show(ex.Message);
+                return null;
             }
-            for (var j = 0; j <= top10.Length - 2; j++)
-            {
-                for (var i = 0; i <= top10.Length - 2; i++)
-                {
-                    if (int.Parse(top10[i].Split('/')[1]) >= int.Parse(top10[i + 1].Split('/')[1])) continue;
-                    var temp = top10[i + 1];
-                    top10[i + 1] = top10[i];
-                    top10[i] = temp;
-                }
-            }
-            var nameofthefile = PathTop10ProductsFolder + "\\" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss", new CultureInfo("en-US")) + ".txt";
-            using (TextWriter tw = new StreamWriter(nameofthefile))
-            {
-                for (var i = 0; i < 10; i++)
-                {
-                    tw.WriteLine(top10[i]);
-                }
-
-            }
-
-            for (var i = 0; i < 10; i++)
-            {
-                rtxtbReportContent.AppendText(top10[i] + "\r\n");
-            }
-
         }
 
         private void btnTop10Products_Click(object sender, EventArgs e)
         {
-            GetTop10();
-           // txtbStartDate.Text = "";
+            string top10 = String.Join("\n", GetTop10().Select(p => p.ToString()).ToArray());
+            rtxtbReportContent.Text = top10;
+            //txtbStartDate.Text = "";
             //txtbStartDate.Enabled = true;
             //txtbEndDate.Text = "";
             //txtbEndDate.Enabled = true;
