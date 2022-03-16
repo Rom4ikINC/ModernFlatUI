@@ -73,7 +73,6 @@ namespace ModernFlatUI
         {
             txtbPrice.ForeColor = Color.Black;
             txtbPrice.BackColor = Color.White;
-            //txtbPrice.Text = "0";
         }
 
         private void btnProductList_Click(object sender, EventArgs e)
@@ -155,9 +154,6 @@ namespace ModernFlatUI
 
         private void txtbName_TextChanged(object sender, EventArgs e)
         {
-            /*if (System.Text.RegularExpressions.Regex.IsMatch(txtbName.Text, "^[a-aA-Z ]")) return;
-            MessageBox.Show(@"This field accepts only alphabetical characters!");
-            txtbName.Text.Remove(txtbName.Text.Length - 1);*/
             string oldTextName = string.Empty;
             if (txtbName.Text.All(chr => char.IsLetterOrDigit(chr) || chr == '-' || chr == ' '))
             {
@@ -189,29 +185,11 @@ namespace ModernFlatUI
                 txtbPrice.Text = txtbPrice.Text.Remove(txtbPrice.Text.Length - 1);
             if (txtbPrice.Text.All(chr => char.IsNumber(chr) || chr == '.')) return;
 
-            //MessageBox.Show("This textbox accepts only alphabetical characters");
             txtbPrice.Text = txtbPrice.Text.Remove(txtbPrice.Text.Length - 1);
             txtbPrice.SelectionStart = txtbPrice.Text.Length;
             txtbPrice.SelectionLength = 0;
             txtbPrice.BackColor = Color.Red;
             txtbPrice.ForeColor = Color.White;
-
-            /*System.Text.RegularExpressions.Regex.IsMatch(txtbPrice.Text, "^[0-9 ]"*/
-            /* if (txtbPrice.Text.All(chr => char.IsNumber(chr)))
-             {
-                 oldTextPrice = txtbPrice.Text;
-                 txtbPrice.Text = oldTextPrice;
-
-                 txtbPrice.BackColor = Color.White;
-                 txtbPrice.ForeColor = Color.Black;
-             }
-             else
-             {
-                 txtbPrice.Text = oldTextPrice;
-                 txtbPrice.BackColor = Color.Red;
-                 txtbPrice.ForeColor = Color.White;
-             }
-             txtbPrice.SelectionStart = txtbPrice.Text.Length;*/
         }
     }
 }
