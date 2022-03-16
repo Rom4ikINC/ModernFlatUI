@@ -71,7 +71,6 @@ namespace ModernFlatUI
             _frmReports.Show();
         }
 
-
         public void ShowFormProductList()
         {
 
@@ -92,13 +91,8 @@ namespace ModernFlatUI
         #region Reports
         private void btnReports_Click(object sender, EventArgs e)
         {
-            //ShowSubMenu(pnlReports);
             HideSubMenu();
             pnlMain.Controls.Clear();
-            //FrmReports.txtbStartDate.Enabled = true;
-            //FrmReports.txtbEndDate.Enabled = true;
-            //FrmReports.txtbStartDate.Text = "";
-            //FrmReports.txtbEndDate.Text = "";
             FrmReports.rtxtbReportContent.Text = "";
             FrmReports.btnTop10Products.Enabled = true;
             FrmReports.btnMakeTheReport.Enabled = true;
@@ -110,10 +104,6 @@ namespace ModernFlatUI
         {
             HideSubMenu();
             pnlMain.Controls.Clear();
-            //FrmReports.txtbStartDate.Enabled = true;
-            //FrmReports.txtbEndDate.Enabled = true;
-            //FrmReports.txtbStartDate.Text = "";
-            //FrmReports.txtbEndDate.Text = "";
             FrmReports.rtxtbReportContent.Text = "";
             FrmReports.btnTop10Products.Enabled = true;
             FrmReports.btnMakeTheReport.Enabled = true;
@@ -125,15 +115,9 @@ namespace ModernFlatUI
         {
             HideSubMenu();
             pnlMain.Controls.Clear();
-            //FrmReports.txtbStartDate.Enabled = false;
-            //FrmReports.txtbEndDate.Enabled = false;
-            //FrmReports.txtbStartDate.Text = "";
-            //FrmReports.txtbEndDate.Text = "";
             FrmReports.rtxtbReportContent.Text = "";
             FrmReports.btnTop10Products.Enabled = false;
             FrmReports.btnMakeTheReport.Enabled = false;
-            //FrmReports.GetTop10();
-
             ShowFormReports();
 
         }
@@ -142,9 +126,6 @@ namespace ModernFlatUI
         #region ProductMaintenance
         private void btnDefineTheProduct_Click(object sender, EventArgs e)
         {
-           /* FrmDefineTheProduct.txtbPrice.ForeColor = Color.Black;
-            FrmDefineTheProduct.txtbPrice.BackColor = Color.White;
-            FrmDefineTheProduct.txtbPrice.Text = "0";*/
             HideSubMenu();
             FrmDefineTheProduct.ClearTheInfoInDefineTheProduct();
             FrmDefineTheProduct.btnAddTheProduct.Enabled = false;
