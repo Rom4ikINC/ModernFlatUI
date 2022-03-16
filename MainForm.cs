@@ -92,7 +92,18 @@ namespace ModernFlatUI
         #region Reports
         private void btnReports_Click(object sender, EventArgs e)
         {
-            ShowSubMenu(pnlReports);
+            //ShowSubMenu(pnlReports);
+            HideSubMenu();
+            pnlMain.Controls.Clear();
+            //FrmReports.txtbStartDate.Enabled = true;
+            //FrmReports.txtbEndDate.Enabled = true;
+            //FrmReports.txtbStartDate.Text = "";
+            //FrmReports.txtbEndDate.Text = "";
+            FrmReports.rtxtbReportContent.Text = "";
+            FrmReports.btnTop10Products.Enabled = true;
+            FrmReports.btnMakeTheReport.Enabled = true;
+
+            ShowFormReports();
         }
 
         private void btnTotalSalesReport_Click(object sender, EventArgs e)
@@ -121,7 +132,7 @@ namespace ModernFlatUI
             FrmReports.rtxtbReportContent.Text = "";
             FrmReports.btnTop10Products.Enabled = false;
             FrmReports.btnMakeTheReport.Enabled = false;
-            FrmReports.GetTop10();
+            //FrmReports.GetTop10();
 
             ShowFormReports();
 

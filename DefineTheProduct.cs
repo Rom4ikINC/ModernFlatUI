@@ -57,6 +57,8 @@ namespace ModernFlatUI
                 MySqlCommand changeProduct = new MySqlCommand(queryChange, conn);
                 changeProduct.ExecuteNonQuery();
 
+                // NEED TO IMPLEMENT ADDING ITEM TO TOP10 TABLE
+
                 changeProduct.Dispose();
                 conn.Close();
             }
