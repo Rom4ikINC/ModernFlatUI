@@ -12,7 +12,7 @@ namespace ModernFlatUI
     public partial class Form1 : Form
     {
 
-        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
+        static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
         internal static Form1 FrmForm1;
 
         public Form1()
@@ -159,6 +159,16 @@ namespace ModernFlatUI
                 textBox1.Enabled = false;
                 button2.Enabled = false;
                 button3.Enabled = false;
+            }
+            else
+            if (!String.IsNullOrEmpty(textBox1.Text))
+            {
+                if (int.Parse(textBox1.Text) > int.Parse(txtAmount.Text))
+                {
+                    textBox1.Enabled = false;
+                    button2.Enabled = false;
+                    button3.Enabled = false;
+                }
             }
             if (dataOrderWindow.Rows.Count == 0)
             {
