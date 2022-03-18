@@ -12,11 +12,7 @@ namespace ModernFlatUI
     public partial class Form1 : Form
     {
 
-        static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
-        
-
-        public static string PathTop10ProductsFile = Environment.CurrentDirectory + "\\Reports\\Top10\\Top10Products.txt";
-
+        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
         internal static Form1 FrmForm1;
 
         public Form1()
@@ -29,11 +25,9 @@ namespace ModernFlatUI
         double totalsum;
         double total1st;
         double total2st;
-        public int a = 1;
-        string b = "";
         double fulltotal;
+        string b;
         public string exceptword = "Not Availabale";
-
 
 
         public DataTable table = new DataTable();
@@ -177,7 +171,6 @@ namespace ModernFlatUI
            
         }
 
-
         private void textBox1_TextChanged_1(object sender, EventArgs e)
         {
 
@@ -216,70 +209,6 @@ namespace ModernFlatUI
 
         }
 
-
-        private void AddToTop10Products()
-        {
-            if (!File.Exists(PathTop10ProductsFile) || File.ReadAllLines(PathTop10ProductsFile).Length == 0)
-            {
-                using (var sw = File.CreateText(PathTop10ProductsFile))
-                {
-                    var sr = File.ReadAllLines(@"OldProductList.txt");
-                    foreach (var line in sr)
-                    {
-                        sw.WriteLine(line.Split('/')[0] + '/' + '0');
-                    }
-                }
-            }
-
-            if (!File.Exists(@"ram.txt"))
-            {
-                using (var sw = File.CreateText(@"ram.txt"))
-                {
-                    fakevar = 2;
-                }
-            }
-
-            var lineToEdit = 0; 
-            for (var i = 0; i < dataOrderWindow.RowCount; i++)
-            {
-                var amountOfTheProduct = dataOrderWindow.Rows[i].Cells[2].Value.ToString();
-                foreach (var line in File.ReadAllLines(PathTop10ProductsFile))
-                {
-                    var nameOfTheProductToCompare = line.Split('/')[0];
-                    var amountOfTheProductInTop10 = line.Split('/')[1];
-                    if (nameOfTheProductToCompare == dataOrderWindow.Rows[i].Cells[0].Value.ToString())
-                    {
-                        var lines = File.ReadAllLines(PathTop10ProductsFile);
-
-                        using (var writer = new StreamWriter(PathTop10ProductsFile))
-                        {
-                            for (var currentLine = 0; currentLine < lines.Length; currentLine++)
-                            {
-                                if (currentLine == lineToEdit)
-                                {
-                                    writer.WriteLine(nameOfTheProductToCompare + '/' + (int.Parse(amountOfTheProductInTop10) + int.Parse(amountOfTheProduct)).ToString());
-                                    lineToEdit = 0;
-                                }
-                                else
-                                {
-                                    writer.WriteLine(lines[currentLine]);
-                                }
-                            }
-                        }
-                    }
-                    lineToEdit++;
-                }
-
-                lineToEdit = 0;
-            }
-        }
-
-
-        private string GetTheOrder()
-        {
-            var order = txtName.Text + '/' + txtPrice.Text + '/' + textBox1.Text + '/' + dataEditWindow.CurrentCell.RowIndex;
-            return order;
-        }
         private void button2_Click(object sender, EventArgs e)
         {
             
@@ -318,7 +247,6 @@ namespace ModernFlatUI
                 int buying = int.Parse(textBox1.Text);
                 string queryupdate;
                 available = available - buying;
-                MessageBox.Show($"" + available);
                 if(available == 0)
                 {
                     queryupdate = $"UPDATE productlistdataram SET AMOUNT='Not available' WHERE NAME = '" + txtName.Text + "';";
