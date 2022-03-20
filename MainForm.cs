@@ -188,7 +188,10 @@ namespace ModernFlatUI
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            if (MessageBox.Show("Are you sure you want to quit?", "My Application", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
