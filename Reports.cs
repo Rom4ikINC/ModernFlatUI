@@ -170,16 +170,12 @@ namespace ModernFlatUI
             // creates a string like "Americano-34\nMocha-111..."
             for (int i = 0; i < productsNames.Length; i++)
             {
-                if (top10Array[i] != 0 && i != productsNames.Length - 1)
+                if (top10Array[i] != 0 )
                 {
                     unsorterTop10 = unsorterTop10 + productsNames[i] + "-" + top10Array[i].ToString() + "\n"; 
                 }
-                else if (top10Array[i] != 0)
-                {
-                    unsorterTop10 = unsorterTop10 + productsNames[i] + "-" + top10Array[i].ToString();
-
-                }
             }
+            unsorterTop10 = unsorterTop10.Substring(0, unsorterTop10.Length - 1);
             string[] top10 = unsorterTop10.Split('\n');
 
             // bubble sort to make top10

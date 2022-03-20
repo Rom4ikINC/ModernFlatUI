@@ -12,7 +12,7 @@ namespace ModernFlatUI
     public partial class Form1 : Form
     {
 
-        static string myConnectionString = "server=localhost;user id=root;pwd=Romaska14;sslmode=None;database=productlist";
+        static string myConnectionString = "server=localhost;user id=root;pwd=221102;sslmode=None;database=productlist";
         internal static Form1 FrmForm1;
 
         public Form1()

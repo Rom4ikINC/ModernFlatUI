@@ -158,8 +158,7 @@ namespace ModernFlatUI
 
         private void btnCashRegister_Click(object sender, EventArgs e)
         {
-
-            
+            FrmForm1.button3.PerformClick();
             {
                 HideSubMenu();
                 pnlMain.Controls.Clear();
